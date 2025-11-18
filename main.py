@@ -179,7 +179,8 @@ def main():
             CHURCH_TAX: [CallbackQueryHandler(receive_church_tax, pattern='^church_')],
         },
         fallbacks=[CallbackQueryHandler(cancel_calculation, pattern='^main_menu$')],
-        allow_reentry=True
+        allow_reentry=True,
+        per_message=False
     )
 
     # Add handlers
@@ -196,6 +197,14 @@ def main():
 
     # Error handler
     application.add_error_handler(error_handler)
+
+    # Register cleanup handler
+    async def post_shutdown(application):
+        """Cleanup after bot shutdown"""
+        await close_db()
+        logger.info("Database connections closed")
+
+    application.post_shutdown = post_shutdown
 
     # Setup scheduler for tax updates monitoring
     if settings.TAX_SOURCES_CHECK_ENABLED:
@@ -222,8 +231,11 @@ if __name__ == '__main__':
         logger.info("Bot stopped by user")
     except Exception as e:
         logger.error(f"Fatal error: {e}")
+        track_error(
+            error=e,
+            context={'location': 'main_startup'},
+            operation='bot_initialization'
+        )
         sys.exit(1)
     finally:
-        # Cleanup
-        asyncio.run(close_db())
         logger.info("Bot shutdown complete")

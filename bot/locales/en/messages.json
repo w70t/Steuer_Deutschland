@@ -1,0 +1,52 @@
+{
+  "welcome": "🇩🇪 Welcome to the German Tax Calculator!\n\nI will help you calculate your taxes and deductions in Germany.\n\nSelect an option:",
+  "language_selected": "✅ Language set to English",
+  "main_menu": "📊 Main Menu\n\nSelect an option:",
+  "calculate_tax": "💶 Calculate Tax",
+  "my_calculations": "📋 My Calculations",
+  "settings": "⚙️ Settings",
+  "help": "❓ Help",
+  "language": "🌍 Language",
+  "back": "◀️ Back",
+  "cancel": "❌ Cancel",
+
+  "enter_gross_income": "💰 Please enter your annual gross income:\n\n(Example: 45000)",
+  "enter_monthly_gross": "💰 Or enter your monthly gross income:",
+  "invalid_amount": "❌ Invalid amount. Please enter a number.",
+
+  "select_tax_class": "📑 Select your tax class:\n\n1️⃣ Class 1: Single\n2️⃣ Class 2: Single parent\n3️⃣ Class 3: Married (higher income)\n4️⃣ Class 4: Married (similar income)\n5️⃣ Class 5: Married (lower income)\n6️⃣ Class 6: Second job",
+  "tax_class_1": "1️⃣ Class 1",
+  "tax_class_2": "2️⃣ Class 2",
+  "tax_class_3": "3️⃣ Class 3",
+  "tax_class_4": "4️⃣ Class 4",
+  "tax_class_5": "5️⃣ Class 5",
+  "tax_class_6": "6️⃣ Class 6",
+
+  "ask_children": "👶 Do you have children? If yes, how many?",
+  "no_children": "No children",
+
+  "ask_church_tax": "⛪ Do you pay church tax?",
+  "yes": "Yes",
+  "no": "No",
+
+  "calculating": "⏳ Calculating your taxes...",
+
+  "calculation_result": "📊 <b>Tax Calculation {year}</b>\n\n💰 <b>Gross Income:</b> {gross}€\n\n<b>📉 Deductions:</b>\n• Income Tax: {income_tax}€\n• Solidarity Surcharge: {soli}€\n• Church Tax: {church}€\n• Health Insurance: {health}€\n• Pension Insurance: {pension}€\n• Unemployment Insurance: {unemployment}€\n• Care Insurance: {care}€\n\n<b>💸 Total Deductions:</b> {total_deductions}€\n<b>✅ Net Income:</b> {net}€\n\n<b>📅 Monthly:</b>\n• Gross: {monthly_gross}€\n• Net: {monthly_net}€",
+
+  "no_calculations": "You haven't made any calculations yet.",
+  "calculation_saved": "✅ Calculation saved!",
+
+  "help_text": "ℹ️ <b>Help - German Tax Calculator</b>\n\n<b>Features:</b>\n• Calculate income tax and social contributions\n• Support for all 6 tax classes\n• Consider children and church tax\n• History of your calculations\n\n<b>Data Sources:</b>\nAll calculations are based on official data from:\n• Federal Ministry of Finance (BMF)\n• Federal Central Tax Office (BZSt)\n• ELSTER\n\n<b>Updates:</b>\nThe system is automatically updated when new tax laws are published.\n\n<b>Privacy:</b>\nAll your data is stored securely and not shared with third parties.",
+
+  "settings_menu": "⚙️ <b>Settings</b>\n\nCustomize your preferences:",
+  "language_menu": "🌍 <b>Select Language</b>\n\nChoose your preferred language:",
+
+  "admin_update_notification": "🔔 <b>New Tax Update Detected!</b>\n\n<b>Title:</b> {title}\n<b>Source:</b> {source}\n<b>Type:</b> {type}\n<b>URL:</b> {url}\n\n<b>Changes:</b>\n{changes}\n\n<b>Effective from:</b> {effective_date}\n\nDo you want to apply these changes?",
+  "approve_update": "✅ Approve",
+  "reject_update": "❌ Reject",
+  "update_approved": "✅ Update approved and applied!",
+  "update_rejected": "❌ Update rejected.",
+
+  "error_occurred": "❌ An error occurred. Please try again.",
+  "admin_only": "⛔ This feature is only available to administrators."
+}

@@ -1,0 +1,52 @@
+{
+  "welcome": "🇩🇪 Witamy w Niemieckim Kalkulatorze Podatkowym!\n\nPomogę Ci obliczyć podatki i składki w Niemczech.\n\nWybierz opcję:",
+  "language_selected": "✅ Język ustawiony na polski",
+  "main_menu": "📊 Menu Główne\n\nWybierz opcję:",
+  "calculate_tax": "💶 Oblicz Podatek",
+  "my_calculations": "📋 Moje Obliczenia",
+  "settings": "⚙️ Ustawienia",
+  "help": "❓ Pomoc",
+  "language": "🌍 Język",
+  "back": "◀️ Wstecz",
+  "cancel": "❌ Anuluj",
+
+  "enter_gross_income": "💰 Proszę podać roczny dochód brutto:\n\n(Przykład: 45000)",
+  "enter_monthly_gross": "💰 Lub podaj miesięczny dochód brutto:",
+  "invalid_amount": "❌ Nieprawidłowa kwota. Proszę podać liczbę.",
+
+  "select_tax_class": "📑 Wybierz klasę podatkową:\n\n1️⃣ Klasa 1: Singiel\n2️⃣ Klasa 2: Samotny rodzic\n3️⃣ Klasa 3: W związku małżeńskim (wyższy dochód)\n4️⃣ Klasa 4: W związku małżeńskim (podobny dochód)\n5️⃣ Klasa 5: W związku małżeńskim (niższy dochód)\n6️⃣ Klasa 6: Druga praca",
+  "tax_class_1": "1️⃣ Klasa 1",
+  "tax_class_2": "2️⃣ Klasa 2",
+  "tax_class_3": "3️⃣ Klasa 3",
+  "tax_class_4": "4️⃣ Klasa 4",
+  "tax_class_5": "5️⃣ Klasa 5",
+  "tax_class_6": "6️⃣ Klasa 6",
+
+  "ask_children": "👶 Czy masz dzieci? Jeśli tak, ile?",
+  "no_children": "Bez dzieci",
+
+  "ask_church_tax": "⛪ Czy płacisz podatek kościelny?",
+  "yes": "Tak",
+  "no": "Nie",
+
+  "calculating": "⏳ Obliczanie podatków...",
+
+  "calculation_result": "📊 <b>Obliczenie Podatku {year}</b>\n\n💰 <b>Dochód Brutto:</b> {gross}€\n\n<b>📉 Potrącenia:</b>\n• Podatek Dochodowy: {income_tax}€\n• Opłata Solidarnościowa: {soli}€\n• Podatek Kościelny: {church}€\n• Ubezpieczenie Zdrowotne: {health}€\n• Ubezpieczenie Emerytalne: {pension}€\n• Ubezpieczenie od Bezrobocia: {unemployment}€\n• Ubezpieczenie Pielęgnacyjne: {care}€\n\n<b>💸 Całkowite Potrącenia:</b> {total_deductions}€\n<b>✅ Dochód Netto:</b> {net}€\n\n<b>📅 Miesięcznie:</b>\n• Brutto: {monthly_gross}€\n• Netto: {monthly_net}€",
+
+  "no_calculations": "Nie wykonałeś jeszcze żadnych obliczeń.",
+  "calculation_saved": "✅ Obliczenie zapisane!",
+
+  "help_text": "ℹ️ <b>Pomoc - Niemiecki Kalkulator Podatkowy</b>\n\n<b>Funkcje:</b>\n• Obliczanie podatku dochodowego i składek społecznych\n• Obsługa wszystkich 6 klas podatkowych\n• Uwzględnianie dzieci i podatku kościelnego\n• Historia obliczeń\n\n<b>Źródła Danych:</b>\nWszystkie obliczenia oparte są na oficjalnych danych z:\n• Federalnego Ministerstwa Finansów (BMF)\n• Federalnego Centralnego Urzędu Skarbowego (BZSt)\n• ELSTER\n\n<b>Aktualizacje:</b>\nSystem jest automatycznie aktualizowany po opublikowaniu nowych przepisów podatkowych.\n\n<b>Prywatność:</b>\nWszystkie dane są bezpiecznie przechowywane i nie są udostępniane osobom trzecim.",
+
+  "settings_menu": "⚙️ <b>Ustawienia</b>\n\nDostosuj swoje preferencje:",
+  "language_menu": "🌍 <b>Wybierz Język</b>\n\nWybierz preferowany język:",
+
+  "admin_update_notification": "🔔 <b>Wykryto Nową Aktualizację Podatkową!</b>\n\n<b>Tytuł:</b> {title}\n<b>Źródło:</b> {source}\n<b>Typ:</b> {type}\n<b>URL:</b> {url}\n\n<b>Zmiany:</b>\n{changes}\n\n<b>Obowiązuje od:</b> {effective_date}\n\nCzy chcesz zastosować te zmiany?",
+  "approve_update": "✅ Zatwierdź",
+  "reject_update": "❌ Odrzuć",
+  "update_approved": "✅ Aktualizacja zatwierdzona i zastosowana!",
+  "update_rejected": "❌ Aktualizacja odrzucona.",
+
+  "error_occurred": "❌ Wystąpił błąd. Spróbuj ponownie.",
+  "admin_only": "⛔ Ta funkcja jest dostępna tylko dla administratorów."
+}

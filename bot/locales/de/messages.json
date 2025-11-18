@@ -1,0 +1,52 @@
+{
+  "welcome": "🇩🇪 Willkommen beim deutschen Steuerrechner!\n\nIch helfe Ihnen, Ihre Steuern und Abgaben in Deutschland zu berechnen.\n\nWählen Sie eine Option:",
+  "language_selected": "✅ Sprache auf Deutsch eingestellt",
+  "main_menu": "📊 Hauptmenü\n\nWählen Sie eine Option:",
+  "calculate_tax": "💶 Steuern berechnen",
+  "my_calculations": "📋 Meine Berechnungen",
+  "settings": "⚙️ Einstellungen",
+  "help": "❓ Hilfe",
+  "language": "🌍 Sprache",
+  "back": "◀️ Zurück",
+  "cancel": "❌ Abbrechen",
+
+  "enter_gross_income": "💰 Bitte geben Sie Ihr jährliches Bruttoeinkommen ein:\n\n(Beispiel: 45000)",
+  "enter_monthly_gross": "💰 Oder geben Sie Ihr monatliches Bruttoeinkommen ein:",
+  "invalid_amount": "❌ Ungültiger Betrag. Bitte geben Sie eine Zahl ein.",
+
+  "select_tax_class": "📑 Wählen Sie Ihre Steuerklasse:\n\n1️⃣ Klasse 1: Alleinstehend\n2️⃣ Klasse 2: Alleinerziehend\n3️⃣ Klasse 3: Verheiratet (höheres Einkommen)\n4️⃣ Klasse 4: Verheiratet (ähnliches Einkommen)\n5️⃣ Klasse 5: Verheiratet (niedrigeres Einkommen)\n6️⃣ Klasse 6: Zweitjob",
+  "tax_class_1": "1️⃣ Klasse 1",
+  "tax_class_2": "2️⃣ Klasse 2",
+  "tax_class_3": "3️⃣ Klasse 3",
+  "tax_class_4": "4️⃣ Klasse 4",
+  "tax_class_5": "5️⃣ Klasse 5",
+  "tax_class_6": "6️⃣ Klasse 6",
+
+  "ask_children": "👶 Haben Sie Kinder? Wenn ja, wie viele?",
+  "no_children": "Keine Kinder",
+
+  "ask_church_tax": "⛪ Zahlen Sie Kirchensteuer?",
+  "yes": "Ja",
+  "no": "Nein",
+
+  "calculating": "⏳ Berechne Ihre Steuern...",
+
+  "calculation_result": "📊 <b>Steuerberechnung {year}</b>\n\n💰 <b>Bruttoeinkommen:</b> {gross}€\n\n<b>📉 Abzüge:</b>\n• Einkommensteuer: {income_tax}€\n• Solidaritätszuschlag: {soli}€\n• Kirchensteuer: {church}€\n• Krankenversicherung: {health}€\n• Rentenversicherung: {pension}€\n• Arbeitslosenversicherung: {unemployment}€\n• Pflegeversicherung: {care}€\n\n<b>💸 Gesamtabzüge:</b> {total_deductions}€\n<b>✅ Nettoeinkommen:</b> {net}€\n\n<b>📅 Monatlich:</b>\n• Brutto: {monthly_gross}€\n• Netto: {monthly_net}€",
+
+  "no_calculations": "Sie haben noch keine Berechnungen durchgeführt.",
+  "calculation_saved": "✅ Berechnung gespeichert!",
+
+  "help_text": "ℹ️ <b>Hilfe - Deutscher Steuerrechner</b>\n\n<b>Funktionen:</b>\n• Berechnung von Einkommensteuer und Sozialabgaben\n• Unterstützung aller 6 Steuerklassen\n• Berücksichtigung von Kindern und Kirchensteuer\n• Verlauf Ihrer Berechnungen\n\n<b>Datenquellen:</b>\nAlle Berechnungen basieren auf offiziellen Daten von:\n• Bundesministerium der Finanzen (BMF)\n• Bundeszentralamt für Steuern (BZSt)\n• ELSTER\n\n<b>Aktualität:</b>\nDas System wird automatisch aktualisiert, wenn neue Steuergesetze veröffentlicht werden.\n\n<b>Datenschutz:</b>\nAlle Ihre Daten werden sicher gespeichert und nicht an Dritte weitergegeben.",
+
+  "settings_menu": "⚙️ <b>Einstellungen</b>\n\nPassen Sie Ihre Präferenzen an:",
+  "language_menu": "🌍 <b>Sprache wählen</b>\n\nWählen Sie Ihre bevorzugte Sprache:",
+
+  "admin_update_notification": "🔔 <b>Neue Steueraktualisierung erkannt!</b>\n\n<b>Titel:</b> {title}\n<b>Quelle:</b> {source}\n<b>Typ:</b> {type}\n<b>URL:</b> {url}\n\n<b>Änderungen:</b>\n{changes}\n\n<b>Gültig ab:</b> {effective_date}\n\nMöchten Sie diese Änderungen anwenden?",
+  "approve_update": "✅ Genehmigen",
+  "reject_update": "❌ Ablehnen",
+  "update_approved": "✅ Aktualisierung genehmigt und angewendet!",
+  "update_rejected": "❌ Aktualisierung abgelehnt.",
+
+  "error_occurred": "❌ Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+  "admin_only": "⛔ Diese Funktion ist nur für Administratoren verfügbar."
+}

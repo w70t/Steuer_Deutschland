@@ -232,16 +232,15 @@ def main():
 
 
 if __name__ == '__main__':
+    loop = None
     try:
         # Fix for Python 3.10+ event loop policy
         if sys.platform == 'win32':
             asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        else:
-            # For Linux/Mac, ensure event loop is available
-            try:
-                asyncio.get_event_loop()
-            except RuntimeError:
-                asyncio.set_event_loop(asyncio.new_event_loop())
+
+        # Create and set new event loop for Python 3.10+
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
 
         main()
     except KeyboardInterrupt:
@@ -255,4 +254,7 @@ if __name__ == '__main__':
         )
         sys.exit(1)
     finally:
+        # Close event loop properly
+        if loop and not loop.is_closed():
+            loop.close()
         logger.info("Bot shutdown complete")

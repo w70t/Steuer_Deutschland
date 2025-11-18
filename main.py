@@ -179,6 +179,7 @@ def main():
             CHURCH_TAX: [CallbackQueryHandler(receive_church_tax, pattern='^church_')],
         },
         fallbacks=[CallbackQueryHandler(cancel_calculation, pattern='^main_menu$')],
+        name="tax_calculation",
         allow_reentry=True,
         per_chat=True,
         per_user=True,
@@ -232,6 +233,16 @@ def main():
 
 if __name__ == '__main__':
     try:
+        # Fix for Python 3.10+ event loop policy
+        if sys.platform == 'win32':
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        else:
+            # For Linux/Mac, ensure event loop is available
+            try:
+                asyncio.get_event_loop()
+            except RuntimeError:
+                asyncio.set_event_loop(asyncio.new_event_loop())
+
         main()
     except KeyboardInterrupt:
         logger.info("Bot stopped by user")

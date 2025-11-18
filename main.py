@@ -180,6 +180,8 @@ def main():
         },
         fallbacks=[CallbackQueryHandler(cancel_calculation, pattern='^main_menu$')],
         allow_reentry=True,
+        per_chat=True,
+        per_user=True,
         per_message=False
     )
 
@@ -206,18 +208,22 @@ def main():
 
     application.post_shutdown = post_shutdown
 
-    # Setup scheduler for tax updates monitoring
-    if settings.TAX_SOURCES_CHECK_ENABLED:
-        scheduler = AsyncIOScheduler()
-        scheduler.add_job(
-            check_tax_updates,
-            'interval',
-            hours=settings.CHECK_UPDATES_INTERVAL_HOURS,
-            args=[application],
-            id='tax_updates_check'
-        )
-        scheduler.start()
-        logger.info(f"Tax updates monitoring enabled (every {settings.CHECK_UPDATES_INTERVAL_HOURS} hours)")
+    # Setup scheduler for tax updates monitoring after initialization
+    async def post_init(application):
+        """Initialize scheduler after event loop is ready"""
+        if settings.TAX_SOURCES_CHECK_ENABLED:
+            scheduler = AsyncIOScheduler()
+            scheduler.add_job(
+                check_tax_updates,
+                'interval',
+                hours=settings.CHECK_UPDATES_INTERVAL_HOURS,
+                args=[application],
+                id='tax_updates_check'
+            )
+            scheduler.start()
+            logger.info(f"Tax updates monitoring enabled (every {settings.CHECK_UPDATES_INTERVAL_HOURS} hours)")
+
+    application.post_init = post_init
 
     # Start bot
     logger.info("Bot started successfully!")

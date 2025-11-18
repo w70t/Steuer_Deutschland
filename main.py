@@ -42,34 +42,58 @@ from bot.services.tax_update_monitor import tax_update_monitor
 from bot.models.database import init_db, close_db
 
 # Import error tracking
-import sentry_sdk
+from bot.utils.error_tracker import error_tracker, track_error
 
 
 def setup_logging():
-    """Setup logging configuration"""
+    """Setup logging configuration with enhanced error tracking"""
     logger.remove()
+
+    # Console logging with colors
     logger.add(
         sys.stdout,
-        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan> - <level>{message}</level>",
-        level=settings.LOG_LEVEL
+        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+        level=settings.LOG_LEVEL,
+        colorize=True
     )
+
+    # Main log file
     logger.add(
         settings.LOG_FILE,
         rotation="10 MB",
         retention="30 days",
-        level=settings.LOG_LEVEL
+        level=settings.LOG_LEVEL,
+        encoding='utf-8',
+        enqueue=True
     )
 
+    # Error-specific log file with detailed information
+    logger.add(
+        settings.ERROR_LOG_FILE,
+        rotation="5 MB",
+        retention="90 days",
+        level="ERROR",
+        encoding='utf-8',
+        backtrace=True,
+        diagnose=True,
+        enqueue=True
+    )
 
-def setup_sentry():
-    """Setup Sentry error tracking"""
-    if settings.ENABLE_SENTRY and settings.SENTRY_DSN:
-        sentry_sdk.init(
-            dsn=settings.SENTRY_DSN,
-            traces_sample_rate=1.0,
-            environment="production"
-        )
-        logger.info("Sentry error tracking enabled")
+    logger.info("✅ Logging system initialized with enhanced error tracking")
+
+
+def show_error_statistics():
+    """عرض إحصائيات الأخطاء عند بدء التشغيل"""
+    try:
+        stats = error_tracker.get_error_statistics()
+        if stats.get('total', 0) > 0:
+            logger.warning(f"📊 Previous errors detected: {stats['total']}")
+            if stats.get('most_common_error'):
+                logger.warning(f"   Most common: {stats['most_common_error']}")
+            if stats.get('most_problematic_operation'):
+                logger.warning(f"   Problematic operation: {stats['most_problematic_operation']}")
+    except Exception as e:
+        logger.debug(f"Could not load error statistics: {e}")
 
 
 async def check_tax_updates(context):
@@ -93,13 +117,26 @@ async def check_tax_updates(context):
 
 
 async def error_handler(update: Update, context):
-    """Handle errors"""
-    logger.error(f"Update {update} caused error {context.error}")
+    """معالج الأخطاء مع تتبع محلي مفصل"""
+    # جمع معلومات السياق
+    error_context = {
+        'update_type': type(update).__name__ if update else None,
+        'chat_id': update.effective_chat.id if update and update.effective_chat else None,
+        'message_text': update.message.text if update and update.message else None,
+        'callback_data': update.callback_query.data if update and update.callback_query else None,
+    }
 
-    if settings.ENABLE_SENTRY:
-        sentry_sdk.capture_exception(context.error)
+    user_id = update.effective_user.id if update and update.effective_user else None
 
-    # Notify user
+    # تتبع الخطأ بشكل مفصل
+    track_error(
+        error=context.error,
+        context=error_context,
+        user_id=user_id,
+        operation='telegram_bot_handler'
+    )
+
+    # إشعار المستخدم
     if update and update.effective_chat:
         try:
             from bot.utils import t
@@ -120,10 +157,10 @@ def main():
 
     # Setup logging
     setup_logging()
-    logger.info("Starting German Tax Calculator Bot...")
+    logger.info("🚀 Starting German Tax Calculator Bot...")
 
-    # Setup error tracking
-    setup_sentry()
+    # Show previous error statistics
+    show_error_statistics()
 
     # Initialize database
     asyncio.run(init_db())

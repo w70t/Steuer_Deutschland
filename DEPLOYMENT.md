@@ -195,10 +195,12 @@ docker-compose restart
 ADMIN_TELEGRAM_ID=your_actual_telegram_id
 ```
 
-**Enable Sentry for error tracking:**
+**Configure error logging:**
 ```env
-ENABLE_SENTRY=true
-SENTRY_DSN=your_sentry_dsn_here
+LOG_LEVEL=WARNING
+ERROR_LOG_FILE=logs/errors.log
+ENABLE_DETAILED_ERRORS=true
+ENABLE_STACK_TRACE=true
 ```
 
 ### 2. Database
@@ -417,7 +419,8 @@ Add Redis for caching (future enhancement).
 - [ ] Monitor logs for suspicious activity
 - [ ] Keep bot token secret
 - [ ] Use environment variables, never hardcode secrets
-- [ ] Enable Sentry error tracking
+- [ ] Enable detailed error logging
+- [ ] Set up log rotation and monitoring
 - [ ] Set up SSL/TLS for database connections
 
 ## Support
@@ -425,9 +428,10 @@ Add Redis for caching (future enhancement).
 If you encounter issues:
 
 1. Check logs: `sudo journalctl -u tax-bot -n 100`
-2. Verify configuration: `cat .env`
-3. Test bot token: Try sending a message to your bot
-4. Check system resources: `htop` or `top`
-5. Review error messages in Sentry (if enabled)
+2. Check error log: `tail -f logs/errors.log`
+3. Verify configuration: `cat .env`
+4. Test bot token: Try sending a message to your bot
+5. Check system resources: `htop` or `top`
+6. Review detailed errors: `cat logs/errors_detailed.jsonl | tail -n 10`
 
 For additional help, open an issue on GitHub.

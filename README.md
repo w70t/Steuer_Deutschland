@@ -240,24 +240,51 @@ Tax formulas are in `bot/services/tax_calculator.py`. Update the `calculate_inco
 pytest
 ```
 
-## 📝 Logging
+## 📝 Logging & Error Tracking
 
-Logs are stored in `logs/tax_bot.log` with automatic rotation:
-- Maximum size: 10 MB per file
+### Log Files
+
+The bot uses an advanced local error tracking system with multiple log files:
+
+**Main Log** (`logs/tax_bot.log`):
+- All operations (INFO, WARNING, ERROR)
+- Rotation: 10 MB
 - Retention: 30 days
-- Level: INFO (configurable)
 
-## 🐛 Error Tracking
+**Error Log** (`logs/errors.log`):
+- Errors only with full stack traces
+- Rotation: 5 MB
+- Retention: 90 days
 
-The bot supports Sentry for error tracking. To enable:
+**Detailed Errors** (`logs/errors_detailed.jsonl`):
+- JSON format for easy analysis
+- One error per line
+- Includes full context and traceback details
 
-1. Create a Sentry account at https://sentry.io
-2. Create a new project
-3. Add DSN to `.env`:
-   ```env
-   SENTRY_DSN=your_sentry_dsn_here
-   ENABLE_SENTRY=true
-   ```
+### What Gets Logged
+
+Every error includes:
+- ⏰ Exact timestamp
+- 🏷️ Error type and message
+- 👤 User ID (if applicable)
+- 📊 Full context (input data, operation)
+- 📜 Complete stack trace
+- 🔍 Local variables at each frame
+
+### Viewing Logs
+
+```bash
+# Real-time error monitoring
+tail -f logs/errors.log
+
+# Last 50 errors
+tail -n 50 logs/errors.log
+
+# Search for specific error
+grep "ValueError" logs/errors.log
+```
+
+See [ERROR_TRACKING.md](ERROR_TRACKING.md) for detailed documentation.
 
 ## 🔐 Security
 

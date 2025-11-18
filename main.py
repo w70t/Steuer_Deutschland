@@ -150,7 +150,7 @@ async def error_handler(update: Update, context):
             logger.error(f"Failed to send error message: {e}")
 
 
-def main():
+async def main():
     """Main function to run the bot"""
     # Validate configuration
     settings.validate_config()
@@ -163,7 +163,7 @@ def main():
     show_error_statistics()
 
     # Initialize database
-    asyncio.run(init_db())
+    await init_db()
     logger.info("Database initialized")
 
     # Create application
@@ -202,7 +202,7 @@ def main():
     application.add_error_handler(error_handler)
 
     # Register cleanup handler
-    async def post_shutdown(application):
+    async def post_shutdown(app):
         """Cleanup after bot shutdown"""
         await close_db()
         logger.info("Database connections closed")
@@ -210,7 +210,7 @@ def main():
     application.post_shutdown = post_shutdown
 
     # Setup scheduler for tax updates monitoring after initialization
-    async def post_init(application):
+    async def post_init(app):
         """Initialize scheduler after event loop is ready"""
         if settings.TAX_SOURCES_CHECK_ENABLED:
             scheduler = AsyncIOScheduler()
@@ -218,7 +218,7 @@ def main():
                 check_tax_updates,
                 'interval',
                 hours=settings.CHECK_UPDATES_INTERVAL_HOURS,
-                args=[application],
+                args=[app],
                 id='tax_updates_check'
             )
             scheduler.start()
@@ -228,21 +228,33 @@ def main():
 
     # Start bot
     logger.info("Bot started successfully!")
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+
+    # Initialize and run
+    await application.initialize()
+    await application.start()
+    await application.updater.start_polling(allowed_updates=Update.ALL_TYPES)
+
+    # Keep the bot running
+    try:
+        # Run until interrupted
+        await asyncio.Event().wait()
+    except (KeyboardInterrupt, SystemExit):
+        logger.info("Received stop signal")
+    finally:
+        # Cleanup
+        await application.updater.stop()
+        await application.stop()
+        await application.shutdown()
 
 
 if __name__ == '__main__':
-    loop = None
     try:
-        # Fix for Python 3.10+ event loop policy
+        # Fix for Python 3.10+ event loop policy on Windows
         if sys.platform == 'win32':
             asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-        # Create and set new event loop for Python 3.10+
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-
-        main()
+        # Run the async main function
+        asyncio.run(main())
     except KeyboardInterrupt:
         logger.info("Bot stopped by user")
     except Exception as e:
@@ -254,7 +266,4 @@ if __name__ == '__main__':
         )
         sys.exit(1)
     finally:
-        # Close event loop properly
-        if loop and not loop.is_closed():
-            loop.close()
         logger.info("Bot shutdown complete")

@@ -1,6 +1,6 @@
 """Tax calculation model for storing calculation history"""
 from datetime import datetime
-from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey, JSON
+from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey, JSON, Boolean
 from sqlalchemy.orm import relationship
 from .user import Base
 

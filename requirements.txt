@@ -18,7 +18,7 @@ apscheduler==3.10.4
 
 # Logging and error tracking
 loguru==0.7.2
-sentry-sdk==1.38.0
+colorama==0.4.6
 
 # Data validation
 pydantic==2.5.2

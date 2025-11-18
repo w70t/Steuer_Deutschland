@@ -19,10 +19,6 @@ ADMIN_TELEGRAM_ID = int(os.getenv('ADMIN_TELEGRAM_ID', '0'))
 # Database Configuration
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite+aiosqlite:///./data/tax_bot.db')
 
-# Error Tracking
-SENTRY_DSN = os.getenv('SENTRY_DSN')
-ENABLE_SENTRY = os.getenv('ENABLE_SENTRY', 'false').lower() == 'true'
-
 # Tax Update Monitoring
 CHECK_UPDATES_INTERVAL_HOURS = int(os.getenv('CHECK_UPDATES_INTERVAL_HOURS', '24'))
 TAX_SOURCES_CHECK_ENABLED = os.getenv('TAX_SOURCES_CHECK_ENABLED', 'true').lower() == 'true'
@@ -35,6 +31,9 @@ ELSTER_URL = os.getenv('ELSTER_URL', 'https://www.elster.de')
 # Logging Configuration
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
 LOG_FILE = os.getenv('LOG_FILE', 'logs/tax_bot.log')
+ERROR_LOG_FILE = os.getenv('ERROR_LOG_FILE', 'logs/errors.log')
+ENABLE_DETAILED_ERRORS = os.getenv('ENABLE_DETAILED_ERRORS', 'true').lower() == 'true'
+ENABLE_STACK_TRACE = os.getenv('ENABLE_STACK_TRACE', 'true').lower() == 'true'
 
 # Bot Configuration
 DEFAULT_LANGUAGE = os.getenv('DEFAULT_LANGUAGE', 'de')

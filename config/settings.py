@@ -92,6 +92,32 @@ TAX_CLASSES = {
     6: 'Second job',
 }
 
+# German States (Bundesländer) with church tax rates
+GERMAN_STATES = {
+    'BW': {'name': 'Baden-Württemberg', 'church_tax': 8},
+    'BY': {'name': 'Bayern', 'church_tax': 8},
+    'BE': {'name': 'Berlin', 'church_tax': 9},
+    'BB': {'name': 'Brandenburg', 'church_tax': 9},
+    'HB': {'name': 'Bremen', 'church_tax': 9},
+    'HH': {'name': 'Hamburg', 'church_tax': 9},
+    'HE': {'name': 'Hessen', 'church_tax': 9},
+    'MV': {'name': 'Mecklenburg-Vorpommern', 'church_tax': 9},
+    'NI': {'name': 'Niedersachsen', 'church_tax': 9},
+    'NW': {'name': 'Nordrhein-Westfalen', 'church_tax': 9},
+    'RP': {'name': 'Rheinland-Pfalz', 'church_tax': 9},
+    'SL': {'name': 'Saarland', 'church_tax': 9},
+    'SN': {'name': 'Sachsen', 'church_tax': 9},
+    'ST': {'name': 'Sachsen-Anhalt', 'church_tax': 9},
+    'SH': {'name': 'Schleswig-Holstein', 'church_tax': 9},
+    'TH': {'name': 'Thüringen', 'church_tax': 9},
+}
+
+# Calculation period options
+CALCULATION_PERIODS = {
+    'monthly': 'Monthly',
+    'annual': 'Annual'
+}
+
 def validate_config():
     """Validate required configuration"""
     if not TELEGRAM_BOT_TOKEN:

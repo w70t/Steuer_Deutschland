@@ -1,6 +1,15 @@
 {
-  "welcome": "🇩🇪 Willkommen beim deutschen Steuerrechner!\n\nIch helfe Ihnen, Ihre Steuern und Abgaben in Deutschland zu berechnen.\n\nWählen Sie eine Option:",
+  "welcome_choose_language": "🇩🇪 Willkommen! / Welcome! / أهلاً!\n\n🌍 Bitte wählen Sie Ihre Sprache:\nPlease select your language:\nالرجاء اختيار لغتك:",
+  "welcome": "🇩🇪 Willkommen beim deutschen Steuerrechner!\n\nIch helfe Ihnen, Ihre Steuern und Abgaben in Deutschland zu berechnen.",
   "language_selected": "✅ Sprache auf Deutsch eingestellt",
+
+  "terms_and_conditions": "📋 <b>Nutzungsbedingungen und Haftungsausschluss</b>\n\n⚠️ <b>Wichtiger Hinweis:</b>\n\nDieser Steuerrechner dient nur zu Informationszwecken und stellt keine professionelle Steuerberatung dar.\n\n<b>Haftungsausschluss:</b>\n• Alle Berechnungen sind Näherungswerte\n• Der Betreiber übernimmt keine Haftung für Ungenauigkeiten\n• Für verbindliche Auskünfte konsultieren Sie bitte einen Steuerberater\n• Die tatsächlichen Steuern können abweichen\n\n<b>Datenquellen:</b>\nBerechnungen basieren auf offiziellen BMF-Daten 2024\n\nDurch die Nutzung dieses Bots akzeptieren Sie diese Bedingungen.",
+  "accept_terms": "✅ Akzeptieren",
+  "decline_terms": "❌ Ablehnen",
+  "terms_accepted": "✅ Vielen Dank! Sie können den Bot nun nutzen.",
+  "terms_declined": "❌ Sie haben die Nutzungsbedingungen abgelehnt.\n\nDer Bot kann ohne Zustimmung nicht verwendet werden.\n\nMöchten Sie Ihre Entscheidung überdenken?",
+  "reconsider": "🔄 Erneut prüfen",
+  "terms_required": "⚠️ Sie müssen die Nutzungsbedingungen akzeptieren, um fortzufahren.",
   "main_menu": "📊 Hauptmenü\n\nWählen Sie eine Option:",
   "calculate_tax": "💶 Steuern berechnen",
   "my_calculations": "📋 Meine Berechnungen",
@@ -10,8 +19,12 @@
   "back": "◀️ Zurück",
   "cancel": "❌ Abbrechen",
 
-  "enter_gross_income": "💰 Bitte geben Sie Ihr jährliches Bruttoeinkommen ein:\n\n(Beispiel: 45000)",
-  "enter_monthly_gross": "💰 Oder geben Sie Ihr monatliches Bruttoeinkommen ein:",
+  "select_period": "📅 Wählen Sie den Berechnungszeitraum:",
+  "period_monthly": "📅 Monatlich",
+  "period_annual": "📅 Jährlich",
+
+  "enter_gross_income_annual": "💰 Bitte geben Sie Ihr jährliches Bruttoeinkommen ein:\n\n(Beispiel: 45000)",
+  "enter_gross_income_monthly": "💰 Bitte geben Sie Ihr monatliches Bruttoeinkommen ein:\n\n(Beispiel: 3750)",
   "invalid_amount": "❌ Ungültiger Betrag. Bitte geben Sie eine Zahl ein.",
 
   "select_tax_class": "📑 Wählen Sie Ihre Steuerklasse:\n\n1️⃣ Klasse 1: Alleinstehend\n2️⃣ Klasse 2: Alleinerziehend\n3️⃣ Klasse 3: Verheiratet (höheres Einkommen)\n4️⃣ Klasse 4: Verheiratet (ähnliches Einkommen)\n5️⃣ Klasse 5: Verheiratet (niedrigeres Einkommen)\n6️⃣ Klasse 6: Zweitjob",
@@ -24,6 +37,8 @@
 
   "ask_children": "👶 Haben Sie Kinder? Wenn ja, wie viele?",
   "no_children": "Keine Kinder",
+
+  "select_state": "🗺️ In welchem Bundesland wohnen Sie?\n\n(Die Kirchensteuer variiert je nach Bundesland)",
 
   "ask_church_tax": "⛪ Zahlen Sie Kirchensteuer?",
   "yes": "Ja",

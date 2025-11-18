@@ -4,7 +4,16 @@ Based on official data from Bundesministerium der Finanzen (BMF)
 """
 from typing import Dict, Tuple
 from datetime import datetime
-from config import TAX_BRACKETS_2024, SOCIAL_SECURITY_2024, TAX_CLASSES
+from config import settings
+from config.settings import (
+    TAX_BRACKETS_2024,
+    SOCIAL_SECURITY_2024,
+    TAX_CLASSES,
+    EMPLOYMENT_TYPES,
+    HEALTH_INSURANCE_COMPANIES,
+    CHILD_ALLOWANCE,
+    GERMAN_STATES
+)
 import math
 
 
@@ -16,7 +25,12 @@ class GermanTaxCalculator:
         self.tax_brackets = TAX_BRACKETS_2024
         self.social_security = SOCIAL_SECURITY_2024
 
-    def calculate_income_tax(self, annual_income: float, tax_class: int) -> float:
+    def calculate_income_tax(
+        self,
+        annual_income: float,
+        tax_class: int,
+        kinderfreibetrag: float = 0.0
+    ) -> float:
         """
         Calculate income tax based on German tax formula
         Using the official formula from BMF
@@ -24,12 +38,18 @@ class GermanTaxCalculator:
         Args:
             annual_income: Annual gross income in EUR
             tax_class: Tax class (1-6)
+            kinderfreibetrag: Child tax allowance (0.0-6.0)
 
         Returns:
             Annual income tax in EUR
         """
         # Apply basic allowance (Grundfreibetrag)
         taxable_income = max(0, annual_income - self.tax_brackets['basic_allowance'])
+
+        # Apply Kinderfreibetrag
+        if kinderfreibetrag > 0:
+            child_deduction = CHILD_ALLOWANCE['per_child'] * kinderfreibetrag
+            taxable_income = max(0, taxable_income - child_deduction)
 
         if taxable_income == 0:
             return 0
@@ -104,20 +124,21 @@ class GermanTaxCalculator:
 
         return round(soli, 2)
 
-    def calculate_church_tax(self, income_tax: float, state: str = 'BW') -> float:
+    def calculate_church_tax(self, income_tax: float, state: str = 'BE_WEST') -> float:
         """
         Calculate church tax (Kirchensteuer)
         8% in Baden-Württemberg and Bavaria, 9% in other states
 
         Args:
             income_tax: Annual income tax
-            state: Federal state code
+            state: Federal state code (including BE_WEST, BE_EAST)
 
         Returns:
             Church tax in EUR
         """
-        # Bavaria and Baden-Württemberg have 8%, others 9%
-        rate = 8 if state in ['BW', 'BY'] else 9
+        # Get church tax rate from state
+        state_data = GERMAN_STATES.get(state, GERMAN_STATES['BE_WEST'])
+        rate = state_data['church_tax']
         church_tax = income_tax * (rate / 100)
 
         return round(church_tax, 2)
@@ -125,31 +146,73 @@ class GermanTaxCalculator:
     def calculate_social_security(
         self,
         annual_income: float,
-        is_east: bool = False
+        state: str = 'BE_WEST',
+        employment_type: str = 'standard',
+        age_group: str = 'under_23',
+        health_insurance_company: str = 'tk'
     ) -> Dict[str, float]:
         """
         Calculate social security contributions
 
         Args:
             annual_income: Annual gross income
-            is_east: True if employed in Eastern Germany
+            state: Federal state code (determines contribution ceiling)
+            employment_type: Type of employment (standard, trainee, civil_servant, self_employed)
+            age_group: Age group (under_23, over_23_children, over_23_no_children)
+            health_insurance_company: Health insurance company code
 
         Returns:
             Dictionary with breakdown of contributions
         """
-        # Contribution ceiling
-        ceiling = (self.social_security['contribution_ceiling_east']
-                  if is_east
-                  else self.social_security['contribution_ceiling'])
+        # Get employment type data
+        emp_data = EMPLOYMENT_TYPES.get(employment_type, EMPLOYMENT_TYPES['standard'])
+
+        # For civil servants and self-employed, no social security contributions
+        if employment_type in ['civil_servant', 'self_employed']:
+            return {
+                'health_insurance': 0,
+                'pension_insurance': 0,
+                'unemployment_insurance': 0,
+                'care_insurance': 0,
+                'total': 0
+            }
+
+        # Get contribution ceiling based on state
+        state_data = GERMAN_STATES.get(state, GERMAN_STATES['BE_WEST'])
+        ceiling = state_data['contribution_ceiling']
 
         # Income subject to contributions (capped at ceiling)
         contributable_income = min(annual_income, ceiling)
 
-        # Calculate contributions (employee share only)
-        health = contributable_income * (self.social_security['health_insurance'] / 2 / 100)
-        pension = contributable_income * (self.social_security['pension_insurance'] / 2 / 100)
+        # Calculate health insurance based on selected company
+        if health_insurance_company != 'private':
+            company_data = HEALTH_INSURANCE_COMPANIES.get(
+                health_insurance_company,
+                HEALTH_INSURANCE_COMPANIES['tk']
+            )
+            health_rate = company_data['employee_share'] / 100
+            health = contributable_income * health_rate
+        else:
+            # Private insurance - no contribution here, handled separately
+            health = 0
+
+        # Calculate pension insurance (employee share only)
+        pension_rate = emp_data['pension_rate'] / 2 / 100  # Employee pays half
+        pension = contributable_income * pension_rate
+
+        # Calculate unemployment insurance (employee share only)
         unemployment = contributable_income * (self.social_security['unemployment_insurance'] / 2 / 100)
-        care = contributable_income * (self.social_security['care_insurance'] / 2 / 100)
+
+        # Calculate care insurance (Pflegeversicherung)
+        care_base_rate = self.social_security['care_insurance'] / 2 / 100
+
+        # Add supplement for 23+ without children (+0.6%)
+        if age_group == 'over_23_no_children':
+            care_rate = care_base_rate + (0.6 / 100)
+        else:
+            care_rate = care_base_rate
+
+        care = contributable_income * care_rate
 
         return {
             'health_insurance': round(health, 2),
@@ -164,9 +227,12 @@ class GermanTaxCalculator:
         annual_gross: float,
         tax_class: int,
         children: int = 0,
+        kinderfreibetrag: float = 0.0,
         church_tax: bool = False,
-        state: str = 'BW',
-        is_east: bool = False
+        state: str = 'BE_WEST',
+        employment_type: str = 'standard',
+        age_group: str = 'under_23',
+        health_insurance_company: str = 'tk'
     ) -> Dict[str, float]:
         """
         Calculate complete net income with all deductions
@@ -174,16 +240,19 @@ class GermanTaxCalculator:
         Args:
             annual_gross: Annual gross income in EUR
             tax_class: Tax class (1-6)
-            children: Number of children
+            children: Number of children (for display purposes)
+            kinderfreibetrag: Child tax allowance (0.0-6.0)
             church_tax: Whether church tax applies
             state: Federal state code
-            is_east: Whether employed in Eastern Germany
+            employment_type: Type of employment
+            age_group: Age group (affects care insurance)
+            health_insurance_company: Health insurance company code
 
         Returns:
             Dictionary with complete breakdown
         """
         # Calculate income tax
-        income_tax = self.calculate_income_tax(annual_gross, tax_class)
+        income_tax = self.calculate_income_tax(annual_gross, tax_class, kinderfreibetrag)
 
         # Calculate solidarity surcharge
         soli = self.calculate_solidarity_surcharge(income_tax)
@@ -192,7 +261,13 @@ class GermanTaxCalculator:
         church = self.calculate_church_tax(income_tax, state) if church_tax else 0
 
         # Calculate social security contributions
-        social_security = self.calculate_social_security(annual_gross, is_east)
+        social_security = self.calculate_social_security(
+            annual_gross,
+            state,
+            employment_type,
+            age_group,
+            health_insurance_company
+        )
 
         # Calculate total deductions
         total_tax = income_tax + soli + church
@@ -217,6 +292,10 @@ class GermanTaxCalculator:
             'net_monthly': round(net_annual / 12, 2),
             'tax_class': tax_class,
             'children': children,
+            'kinderfreibetrag': kinderfreibetrag,
+            'employment_type': employment_type,
+            'age_group': age_group,
+            'health_insurance_company': health_insurance_company,
             'year': self.year
         }
 

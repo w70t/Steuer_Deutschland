@@ -82,34 +82,192 @@ SOCIAL_SECURITY_2024 = {
     'contribution_ceiling_east': 58800,  # BBG East
 }
 
-# Tax Classes (Steuerklassen)
+# Tax Classes (Steuerklassen) with detailed descriptions
 TAX_CLASSES = {
-    1: 'Single, divorced, widowed',
-    2: 'Single parent',
-    3: 'Married, higher income',
-    4: 'Married, similar income',
-    5: 'Married, lower income',
-    6: 'Second job',
+    1: {
+        'code': 1,
+        'name_de': 'Ledige und Allein-Lebende ohne Kinder',
+        'name_en': 'Single without children',
+        'description_de': 'Für unverheiratete, geschiedene oder verwitwete Arbeitnehmer ohne Kinder',
+        'description_ar': 'للعمال غير المتزوجين أو المطلقين أو الأرامل بدون أطفال'
+    },
+    2: {
+        'code': 2,
+        'name_de': 'Ledige und Allein-Lebende mit Kindern',
+        'name_en': 'Single parent with children',
+        'description_de': 'Für Alleinerziehende mit Kindern (Entlastungsbetrag)',
+        'description_ar': 'للآباء الوحيدين مع أطفال (إعفاء ضريبي)'
+    },
+    3: {
+        'code': 3,
+        'name_de': 'Verheirateter Alleinverdiener',
+        'name_en': 'Married, sole earner (higher income)',
+        'description_de': 'Für verheiratete Alleinverdiener oder höheres Einkommen',
+        'description_ar': 'للمتزوجين المعيل الوحيد أو الدخل الأعلى'
+    },
+    4: {
+        'code': 4,
+        'name_de': 'Verheirateter Doppelverdiener',
+        'name_en': 'Married, both working (equal income)',
+        'description_de': 'Für verheiratete Doppelverdiener mit ähnlichem Einkommen',
+        'description_ar': 'للمتزوجين كلاهما يعمل بدخل متساوي'
+    },
+    5: {
+        'code': 5,
+        'name_de': 'Verheirateter Doppelverdiener mit geringerem Einkommen',
+        'name_en': 'Married, both working (lower income)',
+        'description_de': 'Für den Partner mit geringerem Einkommen (Partner hat Steuerklasse 3)',
+        'description_ar': 'للشريك ذو الدخل الأقل (الشريك لديه فئة 3)'
+    },
+    6: {
+        'code': 6,
+        'name_de': 'Nebenverdienst eines Arbeitnehmers',
+        'name_en': 'Second job / additional income',
+        'description_de': 'Für zweites Arbeitsverhältnis oder Nebenjob',
+        'description_ar': 'للوظيفة الثانية أو العمل الإضافي'
+    },
 }
 
-# German States (Bundesländer) with church tax rates
+# Employment Types (Beschäftigungsart)
+EMPLOYMENT_TYPES = {
+    'standard': {
+        'name_de': 'Standard, Angestellte',
+        'name_en': 'Standard employee',
+        'description_de': 'Regulär angestellte Arbeitnehmer',
+        'description_ar': 'موظف عادي',
+        'pension_rate': 18.6,  # Normal pension insurance rate
+    },
+    'trainee': {
+        'name_de': 'Azubi',
+        'name_en': 'Trainee/Apprentice',
+        'description_de': 'Auszubildende',
+        'description_ar': 'متدرب/متمرن',
+        'pension_rate': 18.6,
+        'special_rules': True,
+    },
+    'civil_servant': {
+        'name_de': 'Beamte, Soldaten',
+        'name_en': 'Civil servant, soldier',
+        'description_de': 'Beamte und Soldaten (keine Sozialversicherung)',
+        'description_ar': 'موظف حكومي/جندي (بدون تأمينات اجتماعية)',
+        'pension_rate': 0,  # No social security
+        'health_insurance': 'private',  # Usually private
+    },
+    'self_employed': {
+        'name_de': 'Sonstige, Selbständige',
+        'name_en': 'Self-employed, freelancer',
+        'description_de': 'Selbständige und Freiberufler',
+        'description_ar': 'عامل حر/مستقل',
+        'pension_rate': 0,  # Optional
+        'health_insurance': 'voluntary',
+    },
+}
+
+# German States (Bundesländer) with church tax rates and East/West distinction
+# East Germany has different pension contribution ceilings
 GERMAN_STATES = {
-    'BW': {'name': 'Baden-Württemberg', 'church_tax': 8},
-    'BY': {'name': 'Bayern', 'church_tax': 8},
-    'BE': {'name': 'Berlin', 'church_tax': 9},
-    'BB': {'name': 'Brandenburg', 'church_tax': 9},
-    'HB': {'name': 'Bremen', 'church_tax': 9},
-    'HH': {'name': 'Hamburg', 'church_tax': 9},
-    'HE': {'name': 'Hessen', 'church_tax': 9},
-    'MV': {'name': 'Mecklenburg-Vorpommern', 'church_tax': 9},
-    'NI': {'name': 'Niedersachsen', 'church_tax': 9},
-    'NW': {'name': 'Nordrhein-Westfalen', 'church_tax': 9},
-    'RP': {'name': 'Rheinland-Pfalz', 'church_tax': 9},
-    'SL': {'name': 'Saarland', 'church_tax': 9},
-    'SN': {'name': 'Sachsen', 'church_tax': 9},
-    'ST': {'name': 'Sachsen-Anhalt', 'church_tax': 9},
-    'SH': {'name': 'Schleswig-Holstein', 'church_tax': 9},
-    'TH': {'name': 'Thüringen', 'church_tax': 9},
+    'BW': {
+        'name': 'Baden-Württemberg',
+        'church_tax': 8,
+        'is_east': False,
+        'contribution_ceiling': 62100  # BBG West 2024
+    },
+    'BY': {
+        'name': 'Bayern',
+        'church_tax': 8,
+        'is_east': False,
+        'contribution_ceiling': 62100
+    },
+    'BE_WEST': {
+        'name': 'Berlin (West)',
+        'church_tax': 9,
+        'is_east': False,
+        'contribution_ceiling': 62100
+    },
+    'BE_EAST': {
+        'name': 'Berlin (Ost)',
+        'church_tax': 9,
+        'is_east': True,
+        'contribution_ceiling': 58800  # BBG East 2024
+    },
+    'BB': {
+        'name': 'Brandenburg',
+        'church_tax': 9,
+        'is_east': True,
+        'contribution_ceiling': 58800
+    },
+    'HB': {
+        'name': 'Bremen',
+        'church_tax': 9,
+        'is_east': False,
+        'contribution_ceiling': 62100
+    },
+    'HH': {
+        'name': 'Hamburg',
+        'church_tax': 9,
+        'is_east': False,
+        'contribution_ceiling': 62100
+    },
+    'HE': {
+        'name': 'Hessen',
+        'church_tax': 9,
+        'is_east': False,
+        'contribution_ceiling': 62100
+    },
+    'MV': {
+        'name': 'Mecklenburg-Vorpommern',
+        'church_tax': 9,
+        'is_east': True,
+        'contribution_ceiling': 58800
+    },
+    'NI': {
+        'name': 'Niedersachsen',
+        'church_tax': 9,
+        'is_east': False,
+        'contribution_ceiling': 62100
+    },
+    'NW': {
+        'name': 'Nordrhein-Westfalen',
+        'church_tax': 9,
+        'is_east': False,
+        'contribution_ceiling': 62100
+    },
+    'RP': {
+        'name': 'Rheinland-Pfalz',
+        'church_tax': 9,
+        'is_east': False,
+        'contribution_ceiling': 62100
+    },
+    'SL': {
+        'name': 'Saarland',
+        'church_tax': 9,
+        'is_east': False,
+        'contribution_ceiling': 62100
+    },
+    'SN': {
+        'name': 'Sachsen',
+        'church_tax': 9,
+        'is_east': True,
+        'contribution_ceiling': 58800
+    },
+    'ST': {
+        'name': 'Sachsen-Anhalt',
+        'church_tax': 9,
+        'is_east': True,
+        'contribution_ceiling': 58800
+    },
+    'SH': {
+        'name': 'Schleswig-Holstein',
+        'church_tax': 9,
+        'is_east': False,
+        'contribution_ceiling': 62100
+    },
+    'TH': {
+        'name': 'Thüringen',
+        'church_tax': 9,
+        'is_east': True,
+        'contribution_ceiling': 58800
+    },
 }
 
 # Calculation period options
@@ -213,6 +371,69 @@ HEALTH_INSURANCE_COMPANIES = {
         'total_rate': 16.09,
         'employee_share': 8.79,
     },
+    'viactiv': {
+        'name': 'VIACTIV Krankenkasse',
+        'base_rate': 14.6,
+        'additional_rate': 1.9,
+        'total_rate': 16.5,
+        'employee_share': 9.15,
+    },
+    'pronova': {
+        'name': 'pronova BKK',
+        'base_rate': 14.6,
+        'additional_rate': 1.69,
+        'total_rate': 16.29,
+        'employee_share': 8.95,
+    },
+    'sbk': {
+        'name': 'Siemens-Betriebskrankenkasse (SBK)',
+        'base_rate': 14.6,
+        'additional_rate': 1.9,
+        'total_rate': 16.5,
+        'employee_share': 9.15,
+    },
+    'big_direkt': {
+        'name': 'BIG direkt gesund',
+        'base_rate': 14.6,
+        'additional_rate': 1.9,
+        'total_rate': 16.5,
+        'employee_share': 9.15,
+    },
+    'aok_rheinland': {
+        'name': 'AOK Rheinland/Hamburg',
+        'base_rate': 14.6,
+        'additional_rate': 1.9,
+        'total_rate': 16.5,
+        'employee_share': 9.15,
+    },
+    'aok_nordwest': {
+        'name': 'AOK NordWest',
+        'base_rate': 14.6,
+        'additional_rate': 1.9,
+        'total_rate': 16.5,
+        'employee_share': 9.15,
+    },
+    'aok_hessen': {
+        'name': 'AOK Hessen',
+        'base_rate': 14.6,
+        'additional_rate': 1.9,
+        'total_rate': 16.5,
+        'employee_share': 9.15,
+    },
+    'salus': {
+        'name': 'Salus BKK',
+        'base_rate': 14.6,
+        'additional_rate': 1.49,
+        'total_rate': 16.09,
+        'employee_share': 8.79,
+    },
+    'energie_bkk': {
+        'name': 'Energie-BKK',
+        'base_rate': 14.6,
+        'additional_rate': 1.7,
+        'total_rate': 16.3,
+        'employee_share': 8.95,
+    },
 }
 
 # Age groups for care insurance (Pflegeversicherung)
@@ -221,6 +442,24 @@ AGE_GROUPS = {
     'under_23': {'name': 'Under 23 years', 'care_supplement': 0},
     'over_23_with_children': {'name': '23+ years with children', 'care_supplement': 0},
     'over_23_no_children': {'name': '23+ years without children', 'care_supplement': 0.6},
+}
+
+# Child allowance (Kinderfreibetrag) - Tax allowance per child
+# Values for 2024: €6,384 per child (both parents together)
+CHILD_ALLOWANCE = {
+    'per_child': 6384,  # Total for both parents
+    'single_parent': 3192,  # Half for single parent
+    'education_allowance': 2928,  # Freibetrag für Betreuung und Erziehung
+}
+
+# Kinderfreibetrag options (0.0 - 6.0 in 0.5 steps)
+KINDERFREIBETRAG_OPTIONS = [0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0]
+
+# Private Health Insurance options
+PRIVATE_HEALTH_INSURANCE = {
+    'employer_subsidy_max': 421.76,  # Maximum employer contribution 2024 (50% of max GKV)
+    'description_de': 'Private Krankenversicherung',
+    'description_ar': 'تأمين صحي خاص',
 }
 
 def validate_config():

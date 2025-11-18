@@ -241,12 +241,12 @@ async def main():
             scheduler.add_job(
                 check_tax_updates,
                 'interval',
-                hours=settings.CHECK_UPDATES_INTERVAL_HOURS,
+                minutes=settings.CHECK_UPDATES_INTERVAL_MINUTES,
                 args=[app],
                 id='tax_updates_check'
             )
             scheduler.start()
-            logger.info(f"Tax updates monitoring enabled (every {settings.CHECK_UPDATES_INTERVAL_HOURS} hours)")
+            logger.info(f"Tax updates monitoring enabled (every {settings.CHECK_UPDATES_INTERVAL_MINUTES} minutes)")
 
     application.post_init = post_init
 

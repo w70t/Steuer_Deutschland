@@ -1,0 +1,52 @@
+{
+  "welcome": "🇩🇪 Almanya Vergi Hesaplayıcısına Hoş Geldiniz!\n\nAlmanya'daki vergilerinizi ve kesintilerinizi hesaplamanıza yardımcı olacağım.\n\nBir seçenek seçin:",
+  "language_selected": "✅ Dil Türkçe olarak ayarlandı",
+  "main_menu": "📊 Ana Menü\n\nBir seçenek seçin:",
+  "calculate_tax": "💶 Vergi Hesapla",
+  "my_calculations": "📋 Hesaplarım",
+  "settings": "⚙️ Ayarlar",
+  "help": "❓ Yardım",
+  "language": "🌍 Dil",
+  "back": "◀️ Geri",
+  "cancel": "❌ İptal",
+
+  "enter_gross_income": "💰 Lütfen yıllık brüt gelirinizi girin:\n\n(Örnek: 45000)",
+  "enter_monthly_gross": "💰 Veya aylık brüt gelirinizi girin:",
+  "invalid_amount": "❌ Geçersiz tutar. Lütfen bir sayı girin.",
+
+  "select_tax_class": "📑 Vergi sınıfınızı seçin:\n\n1️⃣ Sınıf 1: Bekar\n2️⃣ Sınıf 2: Tek ebeveyn\n3️⃣ Sınıf 3: Evli (yüksek gelir)\n4️⃣ Sınıf 4: Evli (benzer gelir)\n5️⃣ Sınıf 5: Evli (düşük gelir)\n6️⃣ Sınıf 6: İkinci iş",
+  "tax_class_1": "1️⃣ Sınıf 1",
+  "tax_class_2": "2️⃣ Sınıf 2",
+  "tax_class_3": "3️⃣ Sınıf 3",
+  "tax_class_4": "4️⃣ Sınıf 4",
+  "tax_class_5": "5️⃣ Sınıf 5",
+  "tax_class_6": "6️⃣ Sınıf 6",
+
+  "ask_children": "👶 Çocuğunuz var mı? Varsa, kaç tane?",
+  "no_children": "Çocuk yok",
+
+  "ask_church_tax": "⛪ Kilise vergisi ödüyor musunuz?",
+  "yes": "Evet",
+  "no": "Hayır",
+
+  "calculating": "⏳ Vergileriniz hesaplanıyor...",
+
+  "calculation_result": "📊 <b>Vergi Hesaplaması {year}</b>\n\n💰 <b>Brüt Gelir:</b> {gross}€\n\n<b>📉 Kesintiler:</b>\n• Gelir Vergisi: {income_tax}€\n• Dayanışma Katkısı: {soli}€\n• Kilise Vergisi: {church}€\n• Sağlık Sigortası: {health}€\n• Emeklilik Sigortası: {pension}€\n• İşsizlik Sigortası: {unemployment}€\n• Bakım Sigortası: {care}€\n\n<b>💸 Toplam Kesintiler:</b> {total_deductions}€\n<b>✅ Net Gelir:</b> {net}€\n\n<b>📅 Aylık:</b>\n• Brüt: {monthly_gross}€\n• Net: {monthly_net}€",
+
+  "no_calculations": "Henüz hesaplama yapmadınız.",
+  "calculation_saved": "✅ Hesaplama kaydedildi!",
+
+  "help_text": "ℹ️ <b>Yardım - Almanya Vergi Hesaplayıcısı</b>\n\n<b>Özellikler:</b>\n• Gelir vergisi ve sosyal katkıları hesaplama\n• Tüm 6 vergi sınıfı desteği\n• Çocukları ve kilise vergisini dikkate alma\n• Hesaplamalarınızın geçmişi\n\n<b>Veri Kaynakları:</b>\nTüm hesaplamalar resmi verilerden yapılır:\n• Federal Maliye Bakanlığı (BMF)\n• Federal Merkez Vergi Dairesi (BZSt)\n• ELSTER\n\n<b>Güncellemeler:</b>\nSistem, yeni vergi yasaları yayınlandığında otomatik olarak güncellenir.\n\n<b>Gizlilik:</b>\nTüm verileriniz güvenli bir şekilde saklanır ve üçüncü taraflarla paylaşılmaz.",
+
+  "settings_menu": "⚙️ <b>Ayarlar</b>\n\nTercihlerinizi özelleştirin:",
+  "language_menu": "🌍 <b>Dil Seçin</b>\n\nTercih ettiğiniz dili seçin:",
+
+  "admin_update_notification": "🔔 <b>Yeni Vergi Güncellemesi Tespit Edildi!</b>\n\n<b>Başlık:</b> {title}\n<b>Kaynak:</b> {source}\n<b>Tür:</b> {type}\n<b>URL:</b> {url}\n\n<b>Değişiklikler:</b>\n{changes}\n\n<b>Geçerlilik tarihi:</b> {effective_date}\n\nBu değişiklikleri uygulamak istiyor musunuz?",
+  "approve_update": "✅ Onayla",
+  "reject_update": "❌ Reddet",
+  "update_approved": "✅ Güncelleme onaylandı ve uygulandı!",
+  "update_rejected": "❌ Güncelleme reddedildi.",
+
+  "error_occurred": "❌ Bir hata oluştu. Lütfen tekrar deneyin.",
+  "admin_only": "⛔ Bu özellik sadece yöneticiler için kullanılabilir."
+}

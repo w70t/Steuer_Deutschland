@@ -21,13 +21,23 @@ from config import settings
 
 # Import handlers
 from bot.handlers.start import start_command, main_menu, help_command
+from bot.handlers.onboarding import (
+    set_initial_language,
+    accept_terms,
+    decline_terms,
+    reconsider_terms
+)
 from bot.handlers.calculation import (
     start_calculation,
+    receive_period,
+    receive_state,
     receive_income,
     receive_tax_class,
     receive_children,
     receive_church_tax,
     cancel_calculation,
+    PERIOD,
+    STATE,
     INCOME,
     TAX_CLASS,
     CHILDREN,
@@ -173,6 +183,8 @@ async def main():
     calculation_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_calculation, pattern='^calculate$')],
         states={
+            PERIOD: [CallbackQueryHandler(receive_period, pattern='^period_')],
+            STATE: [CallbackQueryHandler(receive_state, pattern='^state_')],
             INCOME: [MessageHandler(filters.TEXT & ~filters.COMMAND, receive_income)],
             TAX_CLASS: [CallbackQueryHandler(receive_tax_class, pattern='^tc_')],
             CHILDREN: [CallbackQueryHandler(receive_children, pattern='^children_')],
@@ -188,14 +200,26 @@ async def main():
 
     # Add handlers
     application.add_handler(CommandHandler('start', start_command))
+
+    # Onboarding handlers (language selection and terms)
+    application.add_handler(CallbackQueryHandler(set_initial_language, pattern='^setlang_'))
+    application.add_handler(CallbackQueryHandler(accept_terms, pattern='^terms_accept$'))
+    application.add_handler(CallbackQueryHandler(decline_terms, pattern='^terms_decline$'))
+    application.add_handler(CallbackQueryHandler(reconsider_terms, pattern='^terms_reconsider$'))
+
+    # Main menu and navigation handlers
     application.add_handler(CallbackQueryHandler(main_menu, pattern='^main_menu$'))
     application.add_handler(CallbackQueryHandler(help_command, pattern='^help$'))
     application.add_handler(CallbackQueryHandler(settings_menu, pattern='^settings$'))
     application.add_handler(CallbackQueryHandler(language_menu, pattern='^change_language$'))
     application.add_handler(CallbackQueryHandler(set_language, pattern='^lang_'))
     application.add_handler(CallbackQueryHandler(show_history, pattern='^history$'))
+
+    # Admin handlers
     application.add_handler(CallbackQueryHandler(approve_update, pattern='^approve_update_'))
     application.add_handler(CallbackQueryHandler(reject_update, pattern='^reject_update_'))
+
+    # Calculation conversation handler
     application.add_handler(calculation_conv)
 
     # Error handler

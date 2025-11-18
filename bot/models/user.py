@@ -16,7 +16,10 @@ class User(Base):
     first_name = Column(String(255), nullable=True)
     last_name = Column(String(255), nullable=True)
     language = Column(String(10), default='de', nullable=False)
+    state = Column(String(2), nullable=True)  # German state code (BW, BY, etc.)
     is_admin = Column(Boolean, default=False)
+    terms_accepted = Column(Boolean, default=False)
+    terms_accepted_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

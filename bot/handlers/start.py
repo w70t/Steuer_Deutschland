@@ -13,7 +13,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     chat_id = update.effective_chat.id
 
-    # Get or create user in database
+    # Check if user exists
     async with AsyncSessionLocal() as session:
         result = await session.execute(
             select(User).where(User.telegram_id == user.id)
@@ -21,21 +21,14 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         db_user = result.scalar_one_or_none()
 
         if not db_user:
-            # Create new user
-            db_user = User(
-                telegram_id=user.id,
-                username=user.username,
-                first_name=user.first_name,
-                last_name=user.last_name,
-                language='de'
-            )
-            session.add(db_user)
-            await session.commit()
-            logger.info(f"New user registered: {user.id}")
+            # New user - start onboarding (language selection + terms)
+            from .onboarding import choose_language
+            await choose_language(update, context)
+            return
 
         user_lang = db_user.language
 
-    # Store user language in context
+    # Existing user - show welcome and main menu
     context.user_data['language'] = user_lang
 
     # Welcome message
@@ -59,11 +52,8 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Show main menu"""
-    query = update.callback_query
-    await query.answer()
-
+async def show_main_menu(query_or_update, context: ContextTypes.DEFAULT_TYPE):
+    """Show main menu (can be called with query or update)"""
     user_lang = context.user_data.get('language', 'de')
 
     # Main menu text
@@ -80,11 +70,29 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await query.edit_message_text(
-        menu_text,
-        reply_markup=reply_markup,
-        parse_mode='HTML'
-    )
+    # Check if it's a CallbackQuery or Update
+    if hasattr(query_or_update, 'edit_message_text'):
+        # It's a CallbackQuery
+        await query_or_update.edit_message_text(
+            menu_text,
+            reply_markup=reply_markup,
+            parse_mode='HTML'
+        )
+    else:
+        # It's an Update, send new message
+        await query_or_update.message.reply_text(
+            menu_text,
+            reply_markup=reply_markup,
+            parse_mode='HTML'
+        )
+
+
+async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Show main menu"""
+    query = update.callback_query
+    await query.answer()
+
+    await show_main_menu(query, context)
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):

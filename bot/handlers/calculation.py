@@ -9,20 +9,109 @@ from bot.models.calculation import TaxCalculation
 from sqlalchemy import select
 from loguru import logger
 from datetime import datetime
+from config.settings import GERMAN_STATES
 
 # Conversation states
-INCOME, TAX_CLASS, CHILDREN, CHURCH_TAX = range(4)
+PERIOD, STATE, INCOME, TAX_CLASS, CHILDREN, CHURCH_TAX = range(6)
 
 
 async def start_calculation(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Start tax calculation process"""
+    """Start tax calculation process - ask for calculation period"""
     query = update.callback_query
     await query.answer()
 
     user_lang = context.user_data.get('language', 'de')
 
-    # Ask for gross income
-    income_text = t('enter_gross_income', lang=user_lang)
+    # Ask for calculation period (monthly or annual)
+    period_text = t('select_period', lang=user_lang)
+
+    keyboard = [
+        [
+            InlineKeyboardButton(t('monthly', lang=user_lang), callback_data='period_monthly'),
+            InlineKeyboardButton(t('annual', lang=user_lang), callback_data='period_annual'),
+        ],
+        [InlineKeyboardButton(t('cancel', lang=user_lang), callback_data='main_menu')]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await query.edit_message_text(
+        period_text,
+        reply_markup=reply_markup,
+        parse_mode='HTML'
+    )
+
+    return PERIOD
+
+
+async def receive_period(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Receive period selection (monthly/annual)"""
+    query = update.callback_query
+    await query.answer()
+
+    user_lang = context.user_data.get('language', 'de')
+
+    # Extract period from callback data
+    period = query.data.split('_')[1]  # 'monthly' or 'annual'
+    context.user_data['period'] = period
+
+    # Ask for German state (Bundesland)
+    state_text = t('select_state', lang=user_lang)
+
+    # Create state selection keyboard (2 columns, 8 rows)
+    keyboard = []
+    state_codes = list(GERMAN_STATES.keys())
+
+    for i in range(0, len(state_codes), 2):
+        row = []
+        for j in range(2):
+            if i + j < len(state_codes):
+                state_code = state_codes[i + j]
+                state_name = t(f'state_{state_code}', lang=user_lang)
+                row.append(InlineKeyboardButton(state_name, callback_data=f'state_{state_code}'))
+        keyboard.append(row)
+
+    keyboard.append([InlineKeyboardButton(t('cancel', lang=user_lang), callback_data='main_menu')])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await query.edit_message_text(
+        state_text,
+        reply_markup=reply_markup,
+        parse_mode='HTML'
+    )
+
+    return STATE
+
+
+async def receive_state(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Receive state selection"""
+    query = update.callback_query
+    await query.answer()
+
+    user_lang = context.user_data.get('language', 'de')
+
+    # Extract state from callback data
+    state_code = query.data.split('_')[1]
+    context.user_data['state'] = state_code
+
+    # Save state to user database for future use
+    user = update.effective_user
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(User).where(User.telegram_id == user.id)
+        )
+        db_user = result.scalar_one_or_none()
+
+        if db_user:
+            db_user.state = state_code
+            await session.commit()
+            logger.info(f"User {user.id} selected state: {state_code}")
+
+    # Ask for gross income (monthly or annual based on period)
+    period = context.user_data.get('period', 'annual')
+    if period == 'monthly':
+        income_text = t('enter_monthly_gross', lang=user_lang)
+    else:
+        income_text = t('enter_gross_income', lang=user_lang)
 
     # Cancel button
     keyboard = [[InlineKeyboardButton(t('cancel', lang=user_lang), callback_data='main_menu')]]
@@ -49,8 +138,15 @@ async def receive_income(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if income <= 0:
             raise ValueError("Income must be positive")
 
-        # Store income in context
-        context.user_data['gross_income'] = income
+        # Convert monthly to annual if needed
+        period = context.user_data.get('period', 'annual')
+        if period == 'monthly':
+            # User entered monthly, convert to annual for calculation
+            annual_income = income * 12
+            context.user_data['gross_income'] = annual_income
+            context.user_data['entered_monthly'] = income
+        else:
+            context.user_data['gross_income'] = income
 
         # Ask for tax class
         tax_class_text = t('select_tax_class', lang=user_lang)
@@ -175,12 +271,14 @@ async def receive_church_tax(update: Update, context: ContextTypes.DEFAULT_TYPE)
     gross_income = context.user_data['gross_income']
     tax_class = context.user_data['tax_class']
     children = context.user_data['children']
+    state = context.user_data.get('state', 'BE')  # Default to Berlin if not set
 
     result = tax_calculator.calculate_net_income(
         annual_gross=gross_income,
         tax_class=tax_class,
         children=children,
-        church_tax=church_tax
+        church_tax=church_tax,
+        state=state
     )
 
     # Save calculation to database
@@ -200,6 +298,7 @@ async def receive_church_tax(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 tax_class=tax_class,
                 children=children,
                 church_tax=church_tax,
+                state=state,
                 income_tax=result['income_tax'],
                 solidarity_surcharge=result['solidarity_surcharge'],
                 church_tax_amount=result['church_tax'],
